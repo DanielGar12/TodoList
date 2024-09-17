@@ -3,13 +3,14 @@ import { SafeAreaView, Text, Pressable, TextInput, StyleSheet } from 'react-nati
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from './src/screens/SigninScreen/SignInScreen';
+import Navigation from './src/navigation';
 
 
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <SignInScreen />
+      <Navigation />
     </SafeAreaView>
   );
 };

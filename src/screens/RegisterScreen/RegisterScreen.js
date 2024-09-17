@@ -4,19 +4,19 @@ import Logo from '../../../assets/images/react-native-1.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationContainer } from '@react-navigation/native/lib/typescript/src';
 
-const SignInScreen = () => {
+
+const RegisterScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastName] = useState('');
     const navigation = useNavigation();
 
-    const onLoginPressed = () => {console.log('Nothing yet')}
-    const onRegisterPressed = () => {navigation.navigate('Register')}
-
+    const onLoginPressed = () => {navigation.navigate('LogIn')}
+    const onRegisterPressed = () => {console.log('Nothing yet')}
     return (
         <View style={styles.root}>
             
@@ -26,6 +26,20 @@ const SignInScreen = () => {
                 resizeMode='contain' // Correct resizeMode
             />
             <Text>Welcome</Text>
+            
+        
+            <CustomInput
+            placeholder='First Name'
+            value={firstname}
+            setValue={setFirstname}
+            />
+
+            <CustomInput
+            placeholder='Last Name'
+            value={lastname}
+            setValue={setLastName}
+            />
+            
             <CustomInput 
             placeholder='Username' 
             value={username} 
@@ -38,15 +52,15 @@ const SignInScreen = () => {
             setValue={setPassword}
             secureTextEntry={true}
             />
-            <CustomButton text='Log in' onPress={onLoginPressed}/>
-
-            <Text></Text>
-            <Text></Text>
-
-
-            <Text>Don't have an account?</Text>
-
             <CustomButton text='Register' onPress={onRegisterPressed}/>
+
+            <Text></Text>
+            <Text></Text>
+
+
+            <Text>Already have an account?</Text>
+
+            <CustomButton text='Log In' onPress={onLoginPressed}/>
 
         </View>
     );
@@ -64,4 +78,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignInScreen;
+export default RegisterScreen;
