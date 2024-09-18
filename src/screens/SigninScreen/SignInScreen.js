@@ -14,7 +14,7 @@ const SignInScreen = () => {
 
     const navigation = useNavigation();
 
-    const onLoginPressed = () => {navigation.navigate('Home')}
+    const onLoginPressed = () => {navigation.navigate('BottomNavBar')}
     const onRegisterPressed = () => {navigation.navigate('Register')}
 
     return (
