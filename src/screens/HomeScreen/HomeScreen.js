@@ -37,7 +37,7 @@ const HomeScreen = () => {
         <Text style={styles.textStyle1}>Home</Text> 
         <Ionicons name={'add'} size={20} color={'blue'} onPress={() => setModalState(true)}/>
       </View>
-
+      <Text></Text>
       <Text>Welcome {username}</Text>
       
 
