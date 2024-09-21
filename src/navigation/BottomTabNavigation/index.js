@@ -1,1 +1,1 @@
-// export {default} from './BottomTabNavigation'
+export {default} from './BottomTabNavigation'
