@@ -25,6 +25,13 @@ const SettingsScreen = () => {
       </View>
         <Ionicons name={'chevron-forward'} size={30}/>
       </Pressable>
+      <Pressable style={styles.horizontalView} onPress={() => onRegisterPressed()}>
+      <View style={styles.view2}>
+        <Ionicons name={'exit'} size={30}/>
+        <Text style={styles.textStyle2}>Sign Out</Text>
+      </View>
+        <Ionicons name={'chevron-forward'} size={30}/>
+      </Pressable>
       
       {/* <CustomButton
       onPress={onRegisterPressed}
