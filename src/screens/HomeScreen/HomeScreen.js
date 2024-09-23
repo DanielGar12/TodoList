@@ -4,12 +4,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import {username} from '../SigninScreen'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
+import {useForm} from 'react-hook-form'
 
 
 
 
 const HomeScreen = () => {
   const [modalState, setModalState] = useState(false)
+
+  const {control, handleSubmit, formState:{errors}} = useForm()
+
 
   return (
     <View style={styles.root}>
@@ -25,12 +29,27 @@ const HomeScreen = () => {
         />
         <Text style={styles.textStyle1}>Add Todo</Text>
         <Text style={styles.textStyle2}>Task Title</Text>
-        <CustomInput placeholder={'Input titles'}/>
+        <CustomInput 
+        placeholder={'Input titles'}
+        control={control}
+        name={'title'}
+        rules={{required: 'Name of task is required'}}
+        />
         <Text style={styles.textStyle2}>Task Descirption</Text>
-        <CustomInput placeholder={'Input description'}/>
+        <CustomInput 
+        placeholder={'Input description'}
+        control={control}
+        name={'description'}
+        rules={{required: false}}
+        />
         <Text style={styles.textStyle2}>Due Date</Text>
-        <CustomInput placeholder={'Input date'}/> 
-        <CustomButton text={'Create Task'} onPress={() => setModalState(false)}/>
+        <CustomInput 
+        placeholder={'Input date'}
+        control={control}
+        name={'Date'}
+        rules={{required: 'Date is required'}}
+        /> 
+        <CustomButton text={'Create Task'} onPress={() => handleSubmit(setModalState(false))}/>
 
       </View>   
       </Modal>

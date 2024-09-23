@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, Text } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, Text, TextInput} from 'react-native';
 import Logo from '../../../assets/images/react-native-1.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -13,9 +13,13 @@ const SignInScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const {control, handleSubmit, formState:{errors}} = useForm();
+
     const navigation = useNavigation();
 
-    const onLoginPressed = () => {navigation.navigate('BottomNavBar')}
+
+
+    const onLoginPressed = data => { console.log(data); console.log(errors); navigation.navigate('BottomNavBar')}
     const onRegisterPressed = () => {navigation.navigate('Register')}
 
     return (
@@ -26,20 +30,25 @@ const SignInScreen = () => {
                 style={[styles.logo, { height: height * 0.3 }]} // Use dynamic height
                 resizeMode='contain' // Correct resizeMode
             />
-            <Text>Welcome</Text>
+            <Text>Welcom</Text>
             <CustomInput 
+            control={control}
+            name={'username'}
+            rules={{required: 'Username is required'}}
             placeholder='Username' 
-            value={username} 
-            setValue={setUsername}
+            
             />
 
             <CustomInput 
             placeholder='Password' 
-            value={password} 
-            setValue={setPassword}
+            control={control}
+            name={'password'}
+            rules={{required: 'Password is required'}}
             secureTextEntry={true}
             />
-            <CustomButton text='Log in' onPress={onLoginPressed}/>
+
+         
+            <CustomButton text='Log in' onPress={handleSubmit(onLoginPressed)}/>
 
             <Text></Text>
             <Text></Text>
