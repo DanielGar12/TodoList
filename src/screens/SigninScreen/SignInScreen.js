@@ -5,6 +5,7 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native/lib/typescript/src';
+import {useForm, Controller} from 'react-hook-form'
 
 const SignInScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
