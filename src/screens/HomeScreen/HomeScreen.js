@@ -11,8 +11,15 @@ import {useForm} from 'react-hook-form'
 
 const HomeScreen = () => {
   const [modalState, setModalState] = useState(false)
+  const [todoData, setTodoData] = useState(null)
 
-  const {control, handleSubmit, formState:{errors}} = useForm()
+  const {control, handleSubmit, formState:{ errors }} = useForm()
+
+  const submit = (data) => {
+    console.log(data);
+    setTodoData(data);
+    setModalState(false);
+  }
 
 
   return (
@@ -30,26 +37,26 @@ const HomeScreen = () => {
         <Text style={styles.textStyle1}>Add Todo</Text>
         <Text style={styles.textStyle2}>Task Title</Text>
         <CustomInput 
-        placeholder={'Input titles'}
+        placeholder='Input titles'
         control={control}
         name={'title'}
         rules={{required: 'Name of task is required'}}
         />
         <Text style={styles.textStyle2}>Task Descirption</Text>
         <CustomInput 
-        placeholder={'Input description'}
+        placeholder='Input description'
         control={control}
         name={'description'}
         rules={{required: false}}
         />
         <Text style={styles.textStyle2}>Due Date</Text>
         <CustomInput 
-        placeholder={'Input date'}
+        placeholder='Input date'
         control={control}
-        name={'Date'}
+        name={'date'}
         rules={{required: 'Date is required'}}
         /> 
-        <CustomButton text={'Create Task'} onPress={() => handleSubmit(setModalState(false))}/>
+        <CustomButton text={'Create Task'} onPress={handleSubmit(submit)}/>
 
       </View>   
       </Modal>
@@ -58,7 +65,15 @@ const HomeScreen = () => {
       </View>
       <Text></Text>
       <Text>Welcome {username}</Text>
-      
+
+      {todoData && (
+                <View style={styles.todoDisplay}>
+                    <Text style={styles.textStyle1}>Todo Information:</Text>
+                    <Text>Title: {todoData.title || 'No title provided'}</Text>
+                    <Text>Description: {todoData.description || 'No description provided'}</Text>
+                    <Text>Due Date: {todoData.date || 'No date provided'}</Text>
+                </View>
+            )}
 
         
     </View>
