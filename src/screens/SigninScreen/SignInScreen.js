@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, Text, TextInput} from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, Text, TextInput, Alert} from 'react-native';
 import Logo from '../../../assets/images/react-native-1.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native/lib/typescript/src';
 import {useForm, Controller} from 'react-hook-form'
+import axios from 'axios';
 
 const SignInScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
@@ -19,7 +20,28 @@ const SignInScreen = () => {
 
 
 
-    const onLoginPressed = data => { console.log(data); console.log(errors); navigation.navigate('BottomNavBar')}
+    const onLoginPressed = async (data) => { 
+        try{
+            const response = await axios.post('http://localhost:3000/login', {
+                username: data.username,
+                password: data.password,
+            })
+
+            if(response.status === 200){
+                Alert.alert('Success', 'User logged in successfully');
+                navigation.navigate('BottomNavBar')
+            }
+            else{
+                Alert.alert('Error', 'Wrong username or password')
+            }
+        }
+        catch(error){
+
+            console.error('Login error:', error);
+            Alert.alert('Error', error.response?.data?.error || 'Login failed. Please try again.');
+
+        }
+    }
     const onRegisterPressed = () => {navigation.navigate('Register')}
 
     return (
