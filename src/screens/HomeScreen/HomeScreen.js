@@ -1,28 +1,102 @@
-import React, {useState} from 'react'
-import { View, Text, StyleSheet, Pressable, Modal } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { View, Text, StyleSheet, Pressable, Modal, FlatList } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {username} from '../SigninScreen'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import {useForm} from 'react-hook-form'
+import axios from 'axios';
+import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
 
 const HomeScreen = () => {
   const [modalState, setModalState] = useState(false)
-  const [todoData, setTodoData] = useState(null)
+  const [todoData, setTodoData] = useState([])
+  const [date, setDate] = useState(new Date());
+  const [timePicker, setTimePicker] = useState(false)
 
-  const {control, handleSubmit, formState:{ errors }} = useForm()
+  const {control, handleSubmit, reset ,formState:{ errors }} = useForm()
 
-  const submit = (data) => {
-    console.log(data);
-    setTodoData(data);
-    setModalState(false);
+  // const submit = (data) => {
+  //   setTodoData((prevList) => [...prevList, data]) // Add new todo to the array
+  //   setModalState(false)
+  //   reset() // Clear the form fields after submitting
+  // }
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/todos');
+        const data = await response.json();
+        setTodoData(data); // Set the fetched todos in the state
+      } catch (error) {
+        console.error('Error fetching todos:', error);
+      }
+    };
+
+    fetchTodos();
+  }, []); 
+
+
+  const submit = async (data) => {
+    const todoWithDate = { ...data, date }; // Include selected date in todo
+    console.log("Submitted Data:", todoWithDate);
+    console.log("Submitted Data:", data);
+    try {
+        const response = await fetch('http://localhost:3000/todos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save todo');
+        }
+
+        const result = await response.json();
+        setTodoData((prevList) => [...prevList, data]) // Add new todo to the array
+        setModalState(false)
+        reset()
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle error feedback to the user here
+    }
+};
+
+  const displayList = ({ item }) => {
+    return(
+    <View style={styles.todoDisplay}>
+                    <Menu>
+                    <MenuTrigger>
+                    <Ionicons name='ellipsis-vertical' size={25}/>
+                    </MenuTrigger>
+                    <MenuOptions>
+          <MenuOption  text="Edit" />
+          <MenuOption  text="Delete" />
+        </MenuOptions>
+                    </Menu>
+                    <Text style={styles.textStyle2}>{item.title || 'No title provided'}</Text>
+                    <Text style={styles.textStyle3}>{item.description || 'No description provided'}</Text>
+                    <Text style={styles.textStyle2}>{item.date || 'No date provided'}</Text>
+                    <Ionicons name='checkmark' size={25} color='blue'/>
+                </View>
+    )
   }
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setTimePicker(false);
+    setDate(currentDate);
+  };
 
 
   return (
+    <MenuProvider>
     <View style={styles.root}>
       <View style={styles.view1}>
       <Modal visible={modalState}
@@ -50,33 +124,44 @@ const HomeScreen = () => {
         rules={{required: false}}
         />
         <Text style={styles.textStyle2}>Due Date</Text>
-        <CustomInput 
+        <Pressable style={styles.timeContainer} onPress={() => setTimePicker(true)}>
+          <Text> {date.toLocaleDateString()} </Text>
+        {/* <CustomInput 
         placeholder='Input date'
         control={control}
         name={'date'}
         rules={{required: 'Date is required'}}
-        /> 
+        />  */}
+        </Pressable>
+
         <CustomButton text={'Create Task'} onPress={handleSubmit(submit)}/>
 
       </View>   
       </Modal>
+        {timePicker && (
+        <DateTimePicker
+        value={date}
+        mode="date"
+        display="default"
+        onChange={onChange}
+    />
+)}
+
         <Text style={styles.textStyle1}>Home</Text> 
         <Ionicons name={'add'} size={20} color={'blue'} onPress={() => setModalState(true)}/>
       </View>
       <Text></Text>
       <Text>Welcome {username}</Text>
 
-      {todoData && (
-                <View style={styles.todoDisplay}>
-                    <Text style={styles.textStyle1}>Todo Information:</Text>
-                    <Text>Title: {todoData.title || 'No title provided'}</Text>
-                    <Text>Description: {todoData.description || 'No description provided'}</Text>
-                    <Text>Due Date: {todoData.date || 'No date provided'}</Text>
-                </View>
-            )}
+      <FlatList
+        data={todoData} // Pass the todoList array
+        renderItem={displayList} // Render each todo item
+        keyExtractor={(item, index) => index.toString()} // Use index as key
+      />
 
         
     </View>
+    </MenuProvider>
     
   )
 }
@@ -110,10 +195,37 @@ const styles = StyleSheet.create ({
 
     textStyle2: {
         fontSize: 16,
-        color: 'black'
+        color: 'black',
+        fontWeight: 'bold'
 
 
-    }
+    },
+
+    todoDisplay: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderColor: 'gray',
+      borderWidth: 1,
+      padding: 10,
+      marginVertical: 5
+    },
+
+    textStyle3: {
+      color: 'gray',
+      fontSize: 12
+    },
+
+    timeContainer: {
+      backgroundColor: 'white',
+        width: '100%',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        marginVertical: 5,
+  },
 
 
 })
