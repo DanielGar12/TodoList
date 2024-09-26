@@ -32,7 +32,9 @@ const SignInScreen = () => {
                 const userId = response.data.user._id; // Assuming the user ID is here
                 console.log('User ID:', userId); // Log the user ID
                 await AsyncStorage.setItem('userId', userId); // Set user ID in AsyncStorage
-                navigation.navigate('BottomNavBar');
+                // After successful sign-in
+            navigation.navigate('BottomNavBar', { username: data.username });
+
             } else {
                 Alert.alert('Error', 'Wrong username or password');
             }
