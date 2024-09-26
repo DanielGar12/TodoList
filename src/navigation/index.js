@@ -7,6 +7,7 @@ import RegisterScreen from '../screens/RegisterScreen/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import BottomTabNavigation from './BottomTabNavigation/BottomTabNavigation';
 
+
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
     return(

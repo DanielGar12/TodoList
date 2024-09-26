@@ -23,16 +23,13 @@ const SettingsScreen = () => {
    
     }
   ])}
+
+  
+
   return (
     <View style={styles.root}>
       <Text style={styles.textStyle1}>Settings</Text>
-      <Pressable style={styles.horizontalView} onPress={() => console.log('Nothing yet')}>
-      <View style={styles.view2}>
-        <Ionicons name={'person'} size={30}/>
-        <Text style={styles.textStyle2}>Account Information</Text>
-      </View>
-        <Ionicons name={'chevron-forward'} size={30}/>
-      </Pressable>
+     
       <Pressable style={styles.horizontalView} onPress={() => onRegisterPressed()}>
       <View style={styles.view2}>
         <Ionicons name={'exit'} size={30}/>

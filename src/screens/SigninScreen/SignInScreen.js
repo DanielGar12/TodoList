@@ -28,7 +28,7 @@ const SignInScreen = () => {
                 password: data.password,
             });
     
-            if (response.status === 200) {
+            if (response.status === 200){
                 const userId = response.data.user._id; // Assuming the user ID is here
                 console.log('User ID:', userId); // Log the user ID
                 await AsyncStorage.setItem('userId', userId); // Set user ID in AsyncStorage
@@ -55,7 +55,7 @@ const SignInScreen = () => {
                 style={[styles.logo, { height: height * 0.3 }]} // Use dynamic height
                 resizeMode='contain' // Correct resizeMode
             />
-            <Text>Welcom</Text>
+            <Text>Welcome</Text>
             <CustomInput 
             control={control}
             name={'username'}
