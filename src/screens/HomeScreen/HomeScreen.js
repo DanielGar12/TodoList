@@ -8,6 +8,7 @@ import {useForm} from 'react-hook-form'
 import axios from 'axios';
 import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -29,6 +30,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
+        const userId = await AsyncStorage.getItem('userId');
         const response = await fetch('http://localhost:3000/todos');
         const data = await response.json();
         setTodoData(data); // Set the fetched todos in the state
@@ -42,7 +44,9 @@ const HomeScreen = () => {
 
 
   const submit = async (data) => {
-    const todoWithDate = { ...data, date }; // Include selected date in todo
+    const userId = await AsyncStorage.getItem('userId'); 
+  const todoWithDate = { ...data, date, userId }; 
+    
     console.log("Submitted Data:", todoWithDate);
     console.log("Submitted Data:", data);
     try {
@@ -51,7 +55,7 @@ const HomeScreen = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(todoWithDate),
         });
 
         if (!response.ok) {
@@ -132,12 +136,6 @@ const HomeScreen = () => {
         name={'date'}
         rules={{required: 'Date is required'}}
         />  */}
-        </Pressable>
-
-        <CustomButton text={'Create Task'} onPress={handleSubmit(submit)}/>
-
-      </View>   
-      </Modal>
         {timePicker && (
         <DateTimePicker
         value={date}
@@ -146,6 +144,12 @@ const HomeScreen = () => {
         onChange={onChange}
     />
 )}
+        </Pressable>
+
+        <CustomButton text={'Create Task'} onPress={handleSubmit(submit)}/>
+
+      </View>   
+      </Modal>
 
         <Text style={styles.textStyle1}>Home</Text> 
         <Ionicons name={'add'} size={20} color={'blue'} onPress={() => setModalState(true)}/>

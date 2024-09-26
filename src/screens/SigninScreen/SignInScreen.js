@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native/lib/typescript/src';
 import {useForm, Controller} from 'react-hook-form'
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
@@ -22,13 +23,14 @@ const SignInScreen = () => {
 
     const onLoginPressed = async (data) => { 
         try{
-            const response = await axios.post('http://localhost:3000/login', {
+                 const response = await axios.post('http://localhost:3000/login', {
                 username: data.username,
                 password: data.password,
             })
 
             if(response.status === 200){
                 Alert.alert('Success', 'User logged in successfully');
+                await AsyncStorage.setItem('userId', response.data.user._id);
                 navigation.navigate('BottomNavBar')
             }
             else{

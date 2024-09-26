@@ -3,6 +3,7 @@ import React from 'react'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SettingsScreen = () => {
     navigation= useNavigation();
     const onRegisterPressed = () => {Alert.alert('SIGN OUT', 'Are you sure you want to sign out?', [{
@@ -11,8 +12,15 @@ const SettingsScreen = () => {
     },
     {
     text: 'Sign Out',
-    onPress: () => navigation.navigate('LogIn'),
-
+    onPress: async () => {
+      try {
+        await AsyncStorage.removeItem('userId'); // Clear the user ID or any other data
+        navigation.navigate('LogIn'); // Navigate back to the login screen
+      } catch (error) {
+        console.error('Error signing out:', error);
+      }
+    }
+   
     }
   ])}
   return (
