@@ -21,56 +21,56 @@ const HomeScreen = () => {
 
   const {control, handleSubmit, reset ,formState:{ errors }} = useForm()
 
-  // const submit = (data) => {
-  //   setTodoData((prevList) => [...prevList, data]) // Add new todo to the array
-  //   setModalState(false)
-  //   reset() // Clear the form fields after submitting
-  // }
+
 
   useEffect(() => {
     const fetchTodos = async () => {
-      try {
         const userId = await AsyncStorage.getItem('userId');
-        const response = await fetch('http://localhost:3000/todos');
-        const data = await response.json();
-        setTodoData(data); // Set the fetched todos in the state
-      } catch (error) {
-        console.error('Error fetching todos:', error);
-      }
+        try {
+            const response = await fetch(`http://localhost:3000/todos?user=${userId}`); 
+            const data = await response.json();
+            setTodoData(data); 
+        } catch (error) {
+            console.error('Error fetching todos:', error);
+        }
     };
 
     fetchTodos();
-  }, []); 
+}, []); 
 
 
-  const submit = async (data) => {
-    const userId = await AsyncStorage.getItem('userId'); 
-  const todoWithDate = { ...data, date, userId }; 
-    
-    console.log("Submitted Data:", todoWithDate);
-    console.log("Submitted Data:", data);
-    try {
-        const response = await fetch('http://localhost:3000/todos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(todoWithDate),
-        });
 
-        if (!response.ok) {
-            throw new Error('Failed to save todo');
-        }
 
-        const result = await response.json();
-        setTodoData((prevList) => [...prevList, data]) // Add new todo to the array
-        setModalState(false)
-        reset()
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle error feedback to the user here
-    }
+const submit = async (data) => {
+  const userId = await AsyncStorage.getItem('userId');
+  const todoWithDate = { ...data, dueDate: date.toLocaleDateString(), user: userId }; 
+  console.log("Todo Data Being Sent:", todoWithDate); // Log the data
+
+  try {
+      const response = await fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(todoWithDate),
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to save todo');
+      }
+
+      const result = await response.json();
+      setTodoData((prevList) => [...prevList, result.todo]); // Use the saved todo from the response
+      setModalState(false);
+      reset();
+  } catch (error) {
+      console.error('Error:', error);
+      // Handle error feedback to the user here
+  }
 };
+
+
+
 
   const displayList = ({ item }) => {
     return(
@@ -86,7 +86,7 @@ const HomeScreen = () => {
                     </Menu>
                     <Text style={styles.textStyle2}>{item.title || 'No title provided'}</Text>
                     <Text style={styles.textStyle3}>{item.description || 'No description provided'}</Text>
-                    <Text style={styles.textStyle2}>{item.date || 'No date provided'}</Text>
+                    <Text style={styles.textStyle2}>{item.dueDate || 'No date provided'}</Text>
                     <Ionicons name='checkmark' size={25} color='blue'/>
                 </View>
     )
@@ -212,7 +212,8 @@ const styles = StyleSheet.create ({
       borderColor: 'gray',
       borderWidth: 1,
       padding: 10,
-      marginVertical: 5
+      marginVertical: 5,
+      color: 'white'
     },
 
     textStyle3: {

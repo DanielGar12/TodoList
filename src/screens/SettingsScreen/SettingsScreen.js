@@ -14,7 +14,7 @@ const SettingsScreen = () => {
     text: 'Sign Out',
     onPress: async () => {
       try {
-        await AsyncStorage.removeItem('userId'); // Clear the user ID or any other data
+        //await AsyncStorage.removeItem('userId'); // Clear the user ID or any other data
         navigation.navigate('LogIn'); // Navigate back to the login screen
       } catch (error) {
         console.error('Error signing out:', error);

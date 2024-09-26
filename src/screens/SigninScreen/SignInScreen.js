@@ -22,28 +22,27 @@ const SignInScreen = () => {
 
 
     const onLoginPressed = async (data) => { 
-        try{
-                 const response = await axios.post('http://localhost:3000/login', {
+        try {
+            const response = await axios.post('http://localhost:3000/login', {
                 username: data.username,
                 password: data.password,
-            })
-
-            if(response.status === 200){
-                Alert.alert('Success', 'User logged in successfully');
-                await AsyncStorage.setItem('userId', response.data.user._id);
-                navigation.navigate('BottomNavBar')
+            });
+    
+            if (response.status === 200) {
+                const userId = response.data.user._id; // Assuming the user ID is here
+                console.log('User ID:', userId); // Log the user ID
+                await AsyncStorage.setItem('userId', userId); // Set user ID in AsyncStorage
+                navigation.navigate('BottomNavBar');
+            } else {
+                Alert.alert('Error', 'Wrong username or password');
             }
-            else{
-                Alert.alert('Error', 'Wrong username or password')
-            }
-        }
-        catch(error){
-
+        } catch (error) {
             console.error('Login error:', error);
             Alert.alert('Error', error.response?.data?.error || 'Login failed. Please try again.');
-
         }
-    }
+    };
+    
+    
     const onRegisterPressed = () => {navigation.navigate('Register')}
 
     return (
