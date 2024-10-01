@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Image, StyleSheet, useWindowDimensions, Text, Alert } from 'react-native';
-import Logo from '../../../assets/images/react-native-1.png';
+import Logo from '../../../assets/images/NLogo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';

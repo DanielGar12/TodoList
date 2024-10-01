@@ -140,10 +140,13 @@ const updateTodo = async (data) => {
           <MenuOption  text="Delete" onSelect={() => deleteTodo(item._id)} />
         </MenuOptions>
                     </Menu>
+                    <View style={styles.container}>
+
                     <Text style={styles.textStyle2}>{item.title || 'No title provided'}</Text>
                     <Text style={styles.textStyle3}>{item.description || 'No description provided'}</Text>
                     <Text style={styles.textStyle2}>{item.dueDate || 'No date provided'}</Text> 
                     <Ionicons name='checkmark' size={25} color='blue' onPress={() => deleteTodo(item._id)}/> 
+                    </View>
                 </View>
     )
   }
@@ -203,6 +206,7 @@ const updateTodo = async (data) => {
       <Modal visible={modalState}
       animationType={'slide'}
       presentationStyle={'formSheet'}
+     
       >
         <View style={styles.modalView}>
         <Ionicons name={'close'}
@@ -227,12 +231,7 @@ const updateTodo = async (data) => {
         <Text style={styles.textStyle2}>Due Date</Text>
         <Pressable style={styles.timeContainer} onPress={() => setTimePicker(true)}>
           <Text> {date.toLocaleDateString()} </Text>
-        {/* <CustomInput 
-        placeholder='Input date'
-        control={control}
-        name={'date'}
-        rules={{required: 'Date is required'}}
-        />  */}
+      
         {timePicker && (
         <DateTimePicker
         value={date}
@@ -307,7 +306,7 @@ const styles = StyleSheet.create ({
       alignItems: 'center',
       justifyContent: 'space-between',
       borderColor: 'gray',
-      borderWidth: 1,
+      borderWidth: 0.5,
       padding: 10,
       marginVertical: 5,
       color: 'white',
@@ -329,6 +328,14 @@ const styles = StyleSheet.create ({
         paddingVertical: 10,
         marginVertical: 5,
   },
+
+  container: {
+    
+    flexDirection: 'column',
+    width: '100%',
+    padding: 10
+
+  }
 
 
 
