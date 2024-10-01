@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Image, StyleSheet, useWindowDimensions, Text, TextInput, Alert} from 'react-native';
-import Logo from '../../../assets/images/react-native-1.png';
+import Logo from '../../../assets/images/NLogo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
+        color: 'white'
     },
     logo: {
         width: '70%', // Specify percentage width

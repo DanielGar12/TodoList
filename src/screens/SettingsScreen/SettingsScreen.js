@@ -4,7 +4,8 @@ import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const SettingsScreen = () => {
+import ChangeAccountInfo from '../ChangeAccountInfo/ChangeAccountInfo';
+const SettingsScreen = ({ username }) => {
     navigation= useNavigation();
     const onRegisterPressed = () => {Alert.alert('SIGN OUT', 'Are you sure you want to sign out?', [{
       text: 'Cancel',
@@ -29,6 +30,14 @@ const SettingsScreen = () => {
   return (
     <View style={styles.root}>
       <Text style={styles.textStyle1}>Settings</Text>
+
+      <Pressable style={styles.horizontalView} onPress={() =>  navigation.navigate('AccessScreen', { username: username })}>
+      <View style={styles.view2}> 
+        <Ionicons name={'person'} size={30}/>
+        <Text style={styles.textStyle2}>Change Account Information</Text>
+      </View>
+        <Ionicons name={'chevron-forward'} size={30}/>
+      </Pressable>
      
       <Pressable style={styles.horizontalView} onPress={() => onRegisterPressed()}>
       <View style={styles.view2}>
