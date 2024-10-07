@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, Text } from 'react-native';
-import Logo from '../../../assets/images/react-native-1.png';
+import { View, Image, StyleSheet, useWindowDimensions, Text, TextInput, Alert} from 'react-native';
+import Logo from '../../../assets/images/NLogo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native/lib/typescript/src';
+import {useForm, Controller} from 'react-hook-form'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
@@ -12,9 +15,36 @@ const SignInScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const {control, handleSubmit, formState:{errors}} = useForm();
+
     const navigation = useNavigation();
 
-    const onLoginPressed = () => {navigation.navigate('BottomNavBar')}
+
+
+    const onLoginPressed = async (data) => { 
+        try {
+            const response = await axios.post('http://localhost:3000/login', {
+                username: data.username,
+                password: data.password,
+            });
+    
+            if (response.status === 200){
+                const userId = response.data.user._id; // Assuming the user ID is here
+                console.log('User ID:', userId); // Log the user ID
+                await AsyncStorage.setItem('userId', userId); // Set user ID in AsyncStorage
+                // After successful sign-in
+            navigation.navigate('BottomNavBar', { username: data.username });
+
+            } else {
+                Alert.alert('Error', 'Wrong username or password');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            Alert.alert('Error', error.response?.data?.error || 'Login failed. Please try again.');
+        }
+    };
+    
+    
     const onRegisterPressed = () => {navigation.navigate('Register')}
 
     return (
@@ -27,18 +57,23 @@ const SignInScreen = () => {
             />
             <Text>Welcome</Text>
             <CustomInput 
+            control={control}
+            name={'username'}
+            rules={{required: 'Username is required'}}
             placeholder='Username' 
-            value={username} 
-            setValue={setUsername}
+            
             />
 
             <CustomInput 
             placeholder='Password' 
-            value={password} 
-            setValue={setPassword}
+            control={control}
+            name={'password'}
+            rules={{required: 'Password is required'}}
             secureTextEntry={true}
             />
-            <CustomButton text='Log in' onPress={onLoginPressed}/>
+
+         
+            <CustomButton text='Log in' onPress={handleSubmit(onLoginPressed)}/>
 
             <Text></Text>
             <Text></Text>
@@ -56,6 +91,7 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
+        color: 'white'
     },
     logo: {
         width: '70%', // Specify percentage width

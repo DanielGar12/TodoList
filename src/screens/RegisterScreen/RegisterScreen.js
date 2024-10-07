@@ -1,22 +1,55 @@
 import React, {useState} from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, Text } from 'react-native';
-import Logo from '../../../assets/images/react-native-1.png';
+import { View, Image, StyleSheet, useWindowDimensions, Text, Alert } from 'react-native';
+import Logo from '../../../assets/images/NLogo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import {useForm, Controller} from 'react-hook-form';
+import axios from 'axios';
 
 
 const RegisterScreen = () => {
     const { height } = useWindowDimensions(); // Destructure height from useWindowDimensions
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastName] = useState('');
+    // const [username, setUsername] = useState('');
+    // const [password, setPassword] = useState('');
+    // const [firstname, setFirstname] = useState('');
+    // const [lastname, setLastName] = useState('');
+    const {control, handleSubmit, formState:{errors}} = useForm();
     const navigation = useNavigation();
 
     const onLoginPressed = () => {navigation.navigate('LogIn')}
-    const onRegisterPressed = () => {console.log('Nothing yet')}
+    const onRegisterPressed = async (data) => {
+
+        try{
+
+            const response = await axios.post('http://localhost:3000/users', {
+
+                firstName: data.firstName,
+                lastName: data.lastName,
+                username: data.username,
+                password: data.password,
+            })
+
+            if (response.status === 201) {
+                Alert.alert('Success', 'User registered successfully!');
+                navigation.navigate('LogIn'); // Navigate to login screen
+            } else {
+                Alert.alert('Error', 'Something went wrong during registration.');
+            }
+
+        }
+        catch (error){
+
+            console.error('Registration error:', error);
+            Alert.alert('Error', error.response?.data?.error || 'Failed to register. Please try again.');
+
+
+
+        }
+        
+
+    }
     return (
         <View style={styles.root}>
             
@@ -30,29 +63,33 @@ const RegisterScreen = () => {
         
             <CustomInput
             placeholder='First Name'
-            value={firstname}
-            setValue={setFirstname}
+            control={control}
+            name={'firstName'}
+            rules={{required: 'First name is required'}}
             />
 
             <CustomInput
             placeholder='Last Name'
-            value={lastname}
-            setValue={setLastName}
+            control={control}
+            name={'lastName'}
+            rules={{required: 'Last name is required'}}
             />
             
             <CustomInput 
             placeholder='Username' 
-            value={username} 
-            setValue={setUsername}
+            control={control}
+            name={'username'}
+            rules={{required: 'Username is required'}}
             />
 
             <CustomInput 
             placeholder='Password' 
-            value={password} 
-            setValue={setPassword}
+            control={control}
+            name={'password'}
+            rules={{required: 'Password is required'}}
             secureTextEntry={true}
             />
-            <CustomButton text='Register' onPress={onRegisterPressed}/>
+            <CustomButton text='Register' onPress={handleSubmit(onRegisterPressed)}/>
 
             <Text></Text>
             <Text></Text>

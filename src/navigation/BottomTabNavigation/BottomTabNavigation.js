@@ -6,8 +6,11 @@ import SettingsScreen from '../../screens/SettingsScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 const Tab = createBottomTabNavigator();
-const BottomTabNavigation = () => {
-    return (
+const BottomTabNavigation = ({route}) => {
+  
+  const { username } = route.params || { username: '' };
+  
+  return (
       
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -30,8 +33,8 @@ const BottomTabNavigation = () => {
             headerShown: false,
           })}
         >
-          <Tab.Screen name='Home' component={HomeScreen} />
-          <Tab.Screen name='Settings' component={SettingsScreen} />
+          <Tab.Screen name='Home' children={() => <HomeScreen username={username} />} />
+          <Tab.Screen name='Settings' children={() => <SettingsScreen username={username}/>} />
         </Tab.Navigator>
 
     );
